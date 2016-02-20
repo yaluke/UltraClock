@@ -1,0 +1,283 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D67E5721C59343B00C07FD2 /* clock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5651C59343B00C07FD2 /* clock.cpp */; };
+		1D67E5731C59343B00C07FD2 /* ClockData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5661C59343B00C07FD2 /* ClockData.cpp */; };
+		1D67E5741C59343B00C07FD2 /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5681C59343B00C07FD2 /* Input.cpp */; };
+		1D67E5751C59343B00C07FD2 /* LcdBtnInfoUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E56A1C59343B00C07FD2 /* LcdBtnInfoUpdater.cpp */; };
+		1D67E5761C59343B00C07FD2 /* LcdDateUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E56C1C59343B00C07FD2 /* LcdDateUpdater.cpp */; };
+		1D67E5771C59343B00C07FD2 /* LcdTimeUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E56E1C59343B00C07FD2 /* LcdTimeUpdater.cpp */; };
+		1D67E5781C59343B00C07FD2 /* LcdUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5701C59343B00C07FD2 /* LcdUpdater.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1D8511FB1C59330C000194B6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1D67E5651C59343B00C07FD2 /* clock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clock.cpp; sourceTree = "<group>"; };
+		1D67E5661C59343B00C07FD2 /* ClockData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClockData.cpp; sourceTree = "<group>"; };
+		1D67E5671C59343B00C07FD2 /* ClockData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClockData.h; sourceTree = "<group>"; };
+		1D67E5681C59343B00C07FD2 /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Input.cpp; sourceTree = "<group>"; };
+		1D67E5691C59343B00C07FD2 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Input.h; sourceTree = "<group>"; };
+		1D67E56A1C59343B00C07FD2 /* LcdBtnInfoUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdBtnInfoUpdater.cpp; sourceTree = "<group>"; };
+		1D67E56B1C59343B00C07FD2 /* LcdBtnInfoUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdBtnInfoUpdater.h; sourceTree = "<group>"; };
+		1D67E56C1C59343B00C07FD2 /* LcdDateUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdDateUpdater.cpp; sourceTree = "<group>"; };
+		1D67E56D1C59343B00C07FD2 /* LcdDateUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdDateUpdater.h; sourceTree = "<group>"; };
+		1D67E56E1C59343B00C07FD2 /* LcdTimeUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdTimeUpdater.cpp; sourceTree = "<group>"; };
+		1D67E56F1C59343B00C07FD2 /* LcdTimeUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdTimeUpdater.h; sourceTree = "<group>"; };
+		1D67E5701C59343B00C07FD2 /* LcdUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdUpdater.cpp; sourceTree = "<group>"; };
+		1D67E5711C59343B00C07FD2 /* LcdUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdUpdater.h; sourceTree = "<group>"; };
+		1D8511FD1C59330C000194B6 /* UltraClock */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UltraClock; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D8511FA1C59330C000194B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1D8511F41C59330B000194B6 = {
+			isa = PBXGroup;
+			children = (
+				1D8511FF1C59330C000194B6 /* Src */,
+				1D8511FE1C59330C000194B6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1D8511FE1C59330C000194B6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D8511FD1C59330C000194B6 /* UltraClock */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1D8511FF1C59330C000194B6 /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				1D67E5651C59343B00C07FD2 /* clock.cpp */,
+				1D67E5661C59343B00C07FD2 /* ClockData.cpp */,
+				1D67E5671C59343B00C07FD2 /* ClockData.h */,
+				1D67E5681C59343B00C07FD2 /* Input.cpp */,
+				1D67E5691C59343B00C07FD2 /* Input.h */,
+				1D67E56A1C59343B00C07FD2 /* LcdBtnInfoUpdater.cpp */,
+				1D67E56B1C59343B00C07FD2 /* LcdBtnInfoUpdater.h */,
+				1D67E56C1C59343B00C07FD2 /* LcdDateUpdater.cpp */,
+				1D67E56D1C59343B00C07FD2 /* LcdDateUpdater.h */,
+				1D67E56E1C59343B00C07FD2 /* LcdTimeUpdater.cpp */,
+				1D67E56F1C59343B00C07FD2 /* LcdTimeUpdater.h */,
+				1D67E5701C59343B00C07FD2 /* LcdUpdater.cpp */,
+				1D67E5711C59343B00C07FD2 /* LcdUpdater.h */,
+			);
+			name = Src;
+			path = UltraClock;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D8511FC1C59330C000194B6 /* UltraClock */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D8512041C59330C000194B6 /* Build configuration list for PBXNativeTarget "UltraClock" */;
+			buildPhases = (
+				1D8511F91C59330C000194B6 /* Sources */,
+				1D8511FA1C59330C000194B6 /* Frameworks */,
+				1D8511FB1C59330C000194B6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UltraClock;
+			productName = UltraClock;
+			productReference = 1D8511FD1C59330C000194B6 /* UltraClock */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1D8511F51C59330C000194B6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Lukasz Ronka";
+				TargetAttributes = {
+					1D8511FC1C59330C000194B6 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 1D8511F81C59330C000194B6 /* Build configuration list for PBXProject "UltraClock" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1D8511F41C59330B000194B6;
+			productRefGroup = 1D8511FE1C59330C000194B6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D8511FC1C59330C000194B6 /* UltraClock */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D8511F91C59330C000194B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D67E5741C59343B00C07FD2 /* Input.cpp in Sources */,
+				1D67E5761C59343B00C07FD2 /* LcdDateUpdater.cpp in Sources */,
+				1D67E5771C59343B00C07FD2 /* LcdTimeUpdater.cpp in Sources */,
+				1D67E5781C59343B00C07FD2 /* LcdUpdater.cpp in Sources */,
+				1D67E5731C59343B00C07FD2 /* ClockData.cpp in Sources */,
+				1D67E5751C59343B00C07FD2 /* LcdBtnInfoUpdater.cpp in Sources */,
+				1D67E5721C59343B00C07FD2 /* clock.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D8512021C59330C000194B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1D8512031C59330C000194B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1D8512051C59330C000194B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"HEADER_SEARCH_PATHS[arch=*]" = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1D8512061C59330C000194B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D8511F81C59330C000194B6 /* Build configuration list for PBXProject "UltraClock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D8512021C59330C000194B6 /* Debug */,
+				1D8512031C59330C000194B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D8512041C59330C000194B6 /* Build configuration list for PBXNativeTarget "UltraClock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D8512051C59330C000194B6 /* Debug */,
+				1D8512061C59330C000194B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1D8511F51C59330C000194B6 /* Project object */;
+}
