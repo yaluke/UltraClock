@@ -44,5 +44,5 @@ ClockData.o : ClockData.h ClockData.cpp
 	$(CC) $(CFLAGS) ClockData.cpp -o ClockData.o
 
 clean :
-	rm -f *.o ._* clock
+	rm -f *.o ._* .D* clock
 
