@@ -140,10 +140,11 @@ public:
     void ChangeTimerStartStopDown();
     void ChangeTimerSetReset();
 
-    unsigned int GetState();
+    
     //state bit - thread safe
-    void SetStateBit(int a_changeBit);
-    void ZeroStateBit(int a_changeBit);
+    unsigned int GetState();
+    void SetStateBit(unsigned int a_changeBit);
+    void ZeroStateBit(unsigned int a_changeBit);
     
 protected:
 
@@ -193,7 +194,7 @@ protected:
     bool m_sound = false;
     std::chrono::system_clock::time_point m_timeSoundStarted;
     
-    unsigned int m_change_state = 0;
+    unsigned int m_change_state_ts = 0;
 };
 
 #endif

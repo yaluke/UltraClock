@@ -27,7 +27,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
             if( time3 > 600 )
             {
                 m_setShow = false;
-                m_change_state |= CHG_ALARM;
+                SetStateBit(CHG_ALARM);
             }
         }
         else
@@ -35,7 +35,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
             if( time3 < 600 )
             {
                 m_setShow = true;
-                m_change_state |= CHG_ALARM;
+                SetStateBit(CHG_ALARM);
             }
         }
 
@@ -43,7 +43,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
         {
             m_setShow = true;
             m_timeAlarmSetIdx = 0;
-            m_change_state |= CHG_ALARM;
+            SetStateBit(CHG_ALARM);
         }
 
     }
@@ -59,7 +59,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
             if( time3 > 600 )
             {
                 m_setShow = false;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
             }
         }
         else
@@ -67,7 +67,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
             if( time3 < 600 )
             {
                 m_setShow = true;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
             }
         }
         
@@ -75,7 +75,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
         {
             m_setShow = true;
             m_timeTimerSetIdx = 0;
-            m_change_state |= CHG_TIMER;
+            SetStateBit(CHG_TIMER);
         }
         
     }
@@ -135,7 +135,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
                 m_timeStoperData.m_timeStoperMinute = (decis/600)%60;
                 m_timeStoperData.m_timeStoperHour = (decis/36000)%24;
                 m_stoperShowColons = m_timeStoperData.m_timeStoperDeci < 5;
-                m_change_state |=  CHG_STOPER;
+                SetStateBit(CHG_STOPER);
             }
         }
         else if(m_stoperStatus == eStoperStatus::eSplitted)
@@ -145,7 +145,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
             if( (decis < 5 && !m_stoperShowColons) || (decis >=5 && m_stoperShowColons) )
             {
                 m_stoperShowColons = decis < 5;
-                m_change_state |= CHG_STOPER;
+                SetStateBit(CHG_STOPER);
             }
         }
     }
@@ -168,7 +168,7 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
         {
             m_timerStatus = eTimerStatus::eEnded;
             m_timerShowColons = true;
-            m_change_state |= CHG_TIMER;
+            SetStateBit(CHG_TIMER);
             StartSound(a_now, eSoundType::eAlarm);
         }
         else if( (decis/10)%60 != m_timeTimerData.m_timeTimerSecond )
@@ -177,16 +177,16 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
             m_timeTimerData.m_timeTimerMinute = (decis/600)%60;
             m_timeTimerData.m_timeTimerHour = (decis/36000)%24;
             m_timerShowColons = decis%10 < 5;
-            m_change_state |= CHG_TIMER;
+            SetStateBit(CHG_TIMER);
         }
         else if(m_timerShowColons != (decis%10 < 5) )
         {
             m_timerShowColons = decis%10 < 5;
-            m_change_state |= CHG_TIMER;
+            SetStateBit(CHG_TIMER);
         }
     }
   
-    return m_change_state;
+    return GetState();
 }
 
 //temperature sensor 1 (internal)
@@ -385,7 +385,7 @@ void ClockData::ChangeMode()
             m_timeAlarmSetIdx= 0;
             m_timeTimerSetIdx = 0;
             m_setShow = true;
-            m_change_state |= CHG_MODE;
+            SetStateBit(CHG_MODE);
             break;
         case 1:
             m_clockMode = (m_clockMode+1)%3;
@@ -400,7 +400,7 @@ void ClockData::ChangeClockType()
 {
     m_clockType = (m_clockType+1)%3;
     m_clockMode = 0;
-    m_change_state |= CHG_MODE | CHG_CLOCK_TYPE;
+    SetStateBit(CHG_MODE | CHG_CLOCK_TYPE);
 }
 
 //alarm changers
@@ -414,7 +414,7 @@ void ClockData::ChangeAlarmSet()
     else if(!m_setShow)
     {
         m_setShow = true;
-        m_change_state |= CHG_ALARM;
+        SetStateBit(CHG_ALARM);
     }
 }
 
@@ -424,12 +424,12 @@ void ClockData::ChangeAlarmHourUp()
     {
         case 1:
             m_timeAlarmData.m_timeAlarmHour = (m_timeAlarmData.m_timeAlarmHour + 1)%24;
-            m_change_state |= CHG_ALARM;
+            SetStateBit(CHG_ALARM);
             m_timeSetClk = std::chrono::system_clock::now();
             break;
         case 2:
             m_timeAlarmData.m_timeAlarmMinute = (m_timeAlarmData.m_timeAlarmMinute + 1)%60;
-            m_change_state |= CHG_ALARM;
+            SetStateBit(CHG_ALARM);
             m_timeSetClk = std::chrono::system_clock::now();
             break;
     }
@@ -441,12 +441,12 @@ void ClockData::ChangeAlarmHourDown()
     {
         case 1:
             m_timeAlarmData.m_timeAlarmHour = m_timeAlarmData.m_timeAlarmHour ? (m_timeAlarmData.m_timeAlarmHour - 1) : 23;
-            m_change_state |= CHG_ALARM;
+            SetStateBit(CHG_ALARM);
             m_timeSetClk = std::chrono::system_clock::now();
             break;
         case 2:
             m_timeAlarmData.m_timeAlarmMinute = m_timeAlarmData.m_timeAlarmMinute ? (m_timeAlarmData.m_timeAlarmMinute - 1) : 59;
-            m_change_state |= CHG_ALARM;
+            SetStateBit(CHG_ALARM);
             m_timeSetClk = std::chrono::system_clock::now();
             break;
     }
@@ -467,14 +467,14 @@ void ClockData::ChangeStoperStartStop()
             m_stoperNow = std::chrono::system_clock::now();
             m_stoperTime += (m_stoperNow - m_stoperLastStop);
             m_stoperShowColons = true;
-            m_change_state |= CHG_STOPER;
+            SetStateBit(CHG_STOPER);
             break;
         case eStoperStatus::eSplitted:
             m_stoperStatus = eStoperStatus::eSplittedStopped;
             m_stoperNow = std::chrono::system_clock::now();
             m_stoperTime += (m_stoperNow - m_stoperLastStop);
             m_stoperShowColons = true;
-            m_change_state |= CHG_STOPER;
+            SetStateBit(CHG_STOPER);
             break;
         case eStoperStatus::eSplittedStopped:
             m_stoperStatus = eStoperStatus::eSplitted;
@@ -507,7 +507,7 @@ void ClockData::ChangeStoperSplitReset()
             m_timeStoperData.m_timeStoperSecond = (decis/10)%60;
             m_timeStoperData.m_timeStoperMinute = (decis/600)%60;
             m_timeStoperData.m_timeStoperHour = (decis/36000)%24;
-            m_change_state |= CHG_STOPER;
+            SetStateBit(CHG_STOPER);
             break;
         case eStoperStatus::eStopped:
             m_timeStoperData.m_timeStoperHour = 0;
@@ -517,7 +517,7 @@ void ClockData::ChangeStoperSplitReset()
             m_stoperStatus = eStoperStatus::eZero;
             m_stoperTime = std::chrono::duration<double, std::milli>::zero();
             m_stoperShowColons = true;
-            m_change_state |= CHG_STOPER;
+            SetStateBit(CHG_STOPER);
             break;
     }
 }
@@ -540,7 +540,7 @@ void ClockData::ChangeTimerStartStop()
                 m_timerNow = std::chrono::system_clock::now();
                 m_timerTime += (m_timerNow - m_timerLastStop);
                 m_timerShowColons = true;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
                 break;
             case eTimerStatus::eStopped:
                 m_timerStatus = eTimerStatus::eStarted;
@@ -565,17 +565,17 @@ void ClockData::ChangeTimerStartStopUp()
         {
             case 1:
                 m_timeTimerData.m_timeTimerHour = m_timeTimerDataInit.m_timeTimerHour = (m_timeTimerData.m_timeTimerHour + 1)%24;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
                 m_timeSetClk = std::chrono::system_clock::now();
                 break;
             case 2:
                 m_timeTimerData.m_timeTimerMinute = m_timeTimerDataInit.m_timeTimerMinute = (m_timeTimerData.m_timeTimerMinute + 1)%60;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
                 m_timeSetClk = std::chrono::system_clock::now();
                 break;
             case 3:
                 m_timeTimerData.m_timeTimerSecond = m_timeTimerDataInit.m_timeTimerSecond = (m_timeTimerData.m_timeTimerSecond + 1)%60;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
                 m_timeSetClk = std::chrono::system_clock::now();
                 break;
         }
@@ -595,17 +595,17 @@ void ClockData::ChangeTimerStartStopDown()
         {
             case 1:
                 m_timeTimerData.m_timeTimerHour = m_timeTimerDataInit.m_timeTimerHour = m_timeTimerData.m_timeTimerHour ? (m_timeTimerData.m_timeTimerHour - 1) : 23;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
                 m_timeSetClk = std::chrono::system_clock::now();
                 break;
             case 2:
                 m_timeTimerData.m_timeTimerMinute = m_timeTimerDataInit.m_timeTimerMinute = m_timeTimerData.m_timeTimerMinute ? (m_timeTimerData.m_timeTimerMinute - 1) : 59;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
                 m_timeSetClk = std::chrono::system_clock::now();
                 break;
             case 3:
                 m_timeTimerData.m_timeTimerSecond = m_timeTimerDataInit.m_timeTimerSecond = m_timeTimerData.m_timeTimerSecond ? (m_timeTimerData.m_timeTimerSecond - 1) : 59;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
                 m_timeSetClk = std::chrono::system_clock::now();
                 break;
         }
@@ -626,7 +626,7 @@ void ClockData::ChangeTimerSetReset()
             else if(!m_setShow)
             {
                 m_setShow = true;
-                m_change_state |= CHG_TIMER;
+                SetStateBit(CHG_TIMER);
             }
             break;
         case eTimerStatus::eEnded:
@@ -637,28 +637,28 @@ void ClockData::ChangeTimerSetReset()
             m_timeTimerData.m_timeTimerMinute = m_timeTimerDataInit.m_timeTimerMinute;
             m_timeTimerData.m_timeTimerSecond = m_timeTimerDataInit.m_timeTimerSecond;
             m_timerShowColons = true;
-            m_change_state |= CHG_TIMER;
+            SetStateBit(CHG_TIMER);
             break;
             
     }
 }
 
+//state bit - thread safe
 unsigned int ClockData::GetState()
 {
-    return m_change_state;
+    return m_change_state_ts;
 }
 
-//state bit - thread safe
-void ClockData::SetStateBit(int a_changeBit)
+void ClockData::SetStateBit(unsigned int a_changeBit)
 {
     std::lock_guard<std::mutex> lck(m_mtxChange);
-    m_change_state |= a_changeBit;
+    m_change_state_ts |= a_changeBit;
 }
 
-void ClockData::ZeroStateBit(int a_changeBit)
+void ClockData::ZeroStateBit(unsigned int a_changeBit)
 {
     std::lock_guard<std::mutex> lck(m_mtxChange);
-    m_change_state &= !a_changeBit;
+    m_change_state_ts &= ~a_changeBit;
 }
 
 

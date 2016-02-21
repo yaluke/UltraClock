@@ -148,7 +148,7 @@ void DefineCustomChars(int a_lcdHandle)
     lcdCharDef(a_lcdHandle, 6, char_7);
 }
 
-void ReadTempThread(ClockData &data)
+void ReadTempThread(ClockData &a_data)
 {
     ifstream fileTemp1("//sys//bus//w1//devices//28-0115a32491ff//w1_slave");
     ifstream fileTemp2("//sys//bus//w1//devices//28-0000075b9964//w1_slave");
@@ -163,19 +163,19 @@ void ReadTempThread(ClockData &data)
         getline(fileTemp1, strLine);
         string strTemp1(strLine, strLine.find("t=") + 2);
         newVal = stoi(strTemp1);
-        data.SetTemp1(newVal);
+        a_data.SetTemp1(newVal);
         fileTemp2.seekg(0);
         getline(fileTemp2, strLine);
         getline(fileTemp2, strLine);
         string strTemp2(strLine, strLine.find("t=") + 2);
         newVal = stoi(strTemp2);
-        data.SetTemp2(newVal);
+        a_data.SetTemp2(newVal);
         fileTemp3.seekg(0);
         getline(fileTemp3, strLine);
         getline(fileTemp3, strLine);
         string strTemp3(strLine, strLine.find("t=") + 2);
         newVal = stoi(strTemp3);
-        data.SetTemp3(newVal);
+        a_data.SetTemp3(newVal);
         this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 }
@@ -210,7 +210,7 @@ int main(void)
     LcdTemp2Updater temp2_updater(lcdHandler, clock, CHG_TEMP_2, 3, 7);
     LcdTemp3Updater temp3_updater(lcdHandler, clock, CHG_TEMP_3, 3, 14);
     
-    int updateState = 0;
+    unsigned int updateState = 0;
     
     thread tempReader(ReadTempThread, ref(clock));
     
@@ -218,6 +218,8 @@ int main(void)
     vecUpdaters.push_back(&time_updater);
     vecUpdaters.push_back(&date_updater);
     vecUpdaters.push_back(&temp1_updater);
+    vecUpdaters.push_back(&temp2_updater);
+    vecUpdaters.push_back(&temp3_updater);
     
     //main program loop
     while(true)
@@ -236,7 +238,7 @@ int main(void)
         //show clock type & mode
         lcdPosition(lcdHandler, 18, 0);
         lcdPrintf(lcdHandler, "%u%u", clock.GetClockType(), clock.GetClockMode());
-
+        
         if(updateState & CHG_MODE)
         {
             int start = clock.GetClockMode()*7;
@@ -294,6 +296,11 @@ int main(void)
         
         updateState = clock.CheckChanges(now);
         
+        //show clock update state
+        lcdPosition(lcdHandler, 0, 0);
+        lcdPrintf(lcdHandler, "%03u", updateState);
+
+        
         for(LcdUpdater* pUpd: vecUpdaters)
         {
             if(updateState & pUpd->GetUpdateBit())
@@ -302,9 +309,9 @@ int main(void)
             }
         }
 
-        temp1_updater.Update();
-        temp2_updater.Update();
-        temp3_updater.Update();
+        //temp1_updater.Update();
+        //temp2_updater.Update();
+        //temp3_updater.Update();
         this_thread::sleep_for(std::chrono::milliseconds(50));
         
     }
