@@ -119,7 +119,7 @@ ButtonDef arrButtonData[] {
 };
 
 //regular
-/*
+
 unsigned char char_1[] = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
 unsigned char char_2[] = {0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 unsigned char char_3[] = {0x1f, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
@@ -127,8 +127,9 @@ unsigned char char_4[] = {0x1f, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x1f};
 unsigned char char_5[] = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x1f};
 unsigned char char_6[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f};
 unsigned char char_7[] = {0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f};
-*/
+
 //bold
+/*
 unsigned char char_1[] = {0x01, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03};
 unsigned char char_2[] = {0x1f, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 unsigned char char_3[] = {0x1f, 0x1f, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03};
@@ -136,6 +137,7 @@ unsigned char char_4[] = {0x1f, 0x1f, 0x03, 0x03, 0x03, 0x03, 0x1f, 0x1f};
 unsigned char char_5[] = {0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x1f, 0x1f};
 unsigned char char_6[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f, 0x1f};
 unsigned char char_7[] = {0x1f, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x1f, 0x1f};
+*/
 
 void DefineCustomChars(int a_lcdHandle)
 {
@@ -201,7 +203,7 @@ int main(void)
     }
     
     //init updaters
-    LcdTimeUpdater time_updater(lcdHandler, clock, CHG_TIME, 1, 6);
+    LcdTimeUpdater time_updater(lcdHandler, clock, CHG_TIME, 0, 3);
     LcdDateUpdater date_updater(lcdHandler, clock, CHG_DATE, 2, 3);
     LcdAlarmUpdater alarm_updater(lcdHandler, clock, CHG_ALARM, 2, 3);
     LcdStoperUpdater stoper_updater(lcdHandler, clock, CHG_STOPER, 2, 3);
@@ -236,8 +238,8 @@ int main(void)
         digitalWrite(12, clock.GetSound() ? 1 : 0);
         
         //show clock type & mode
-        lcdPosition(lcdHandler, 18, 0);
-        lcdPrintf(lcdHandler, "%u%u", clock.GetClockType(), clock.GetClockMode());
+        //lcdPosition(lcdHandler, 18, 0);
+        //lcdPrintf(lcdHandler, "%u%u", clock.GetClockType(), clock.GetClockMode());
         
         if(updateState & CHG_MODE)
         {
@@ -297,8 +299,8 @@ int main(void)
         updateState = clock.CheckChanges(now);
         
         //show clock update state
-        lcdPosition(lcdHandler, 0, 0);
-        lcdPrintf(lcdHandler, "%03u", updateState);
+        //lcdPosition(lcdHandler, 0, 0);
+        //lcdPrintf(lcdHandler, "%03u", updateState);
 
         
         for(LcdUpdater* pUpd: vecUpdaters)
@@ -308,10 +310,6 @@ int main(void)
                 pUpd->Update();
             }
         }
-
-        //temp1_updater.Update();
-        //temp2_updater.Update();
-        //temp3_updater.Update();
         this_thread::sleep_for(std::chrono::milliseconds(50));
         
     }
