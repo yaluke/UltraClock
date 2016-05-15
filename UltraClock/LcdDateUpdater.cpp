@@ -21,5 +21,5 @@ void LcdDateUpdater::Update()
 void LcdDateUpdater::Clean()
 {
     lcdPosition(m_lcdHandle, m_col, m_line);
-    lcdPrintf(m_lcdHandle, "              ");
+    lcdPrintf(m_lcdHandle, "                 ");
 }

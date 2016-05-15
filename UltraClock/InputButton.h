@@ -40,7 +40,7 @@ enum class eBtnState
 class InputButton : public Input
 {
 public:
-    InputButton(ClockData& a_data, int a_gpio_id, void (ClockData::*a_Action1)(), void (ClockData::*a_Action2)(), void (ClockData::*a_Action3)(), void (ClockData::*a_Action4)())
+    InputButton(ClockData& a_data, int a_gpio_id, void (ClockData::*a_Action1)() = nullptr, void (ClockData::*a_Action2)() = nullptr, void (ClockData::*a_Action3)() = nullptr, void (ClockData::*a_Action4)() = nullptr)
     : Input(a_data, a_Action1, a_Action2, a_Action3, a_Action4), m_gpio_id(a_gpio_id)
     {
         

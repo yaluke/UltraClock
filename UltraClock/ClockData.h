@@ -17,6 +17,7 @@
 #define CHG_TEMP_2          128
 #define CHG_TEMP_3          256
 #define CHG_CLOCK_TYPE      512
+#define CHG_ALL_STATES      1023
 
 enum eClockMode
 {
@@ -60,21 +61,17 @@ public:
     void ChangeMode();
     void ChangeClockType();
 
-    //temperature sensor 1 (internal)
-    int GetTemp1();
-    void SetTemp1(int a_newTemp);
-    
-    //temperature sensor 2 & 3 (external)
-    int GetTemp2();
-    void SetTemp2(int a_newTemp);
-
-    int GetTemp3();
-    void SetTemp3(int a_newTemp);
+    //temperature sensors
+    int GetTemp(unsigned int a_idx);
+    void SetTemp(unsigned int a_idx, int a_newTemp);
     
     //clock mode/type
+    void ClockTypeModeUpdated();
     int GetClockType();
+    int GetPrevClockType();
     void SetClockType(int a_newClockType);
     int GetClockMode();
+    int GetPrevClockMode();
     void SetClockMode(int a_newClockMode);
     
     //date time
@@ -150,7 +147,9 @@ protected:
 
     std::mutex m_mtxChange;
     int m_clockMode = 0;
+    int m_prevClockMode = 0;
     int m_clockType = 0;    //normal clock, darkroom multitimer, enlarger stoper
+    int m_prevClockType = 0;
     tm m_dateTime;
     //alarm data
     AlarmData m_timeAlarmData;
@@ -178,12 +177,13 @@ protected:
     
     eTimerStatus m_timerStatus = eTimerStatus::eZero;
     
+    std::array<int, 3> m_temp = {{0}};
     //temperature from sensor 1 (internal)
-    int m_temp1 = 0;
+    //int m_temp1 = 0;
 
     //temperature from sensor 2 & 3 (external)
-    int m_temp2 = 0;
-    int m_temp3 = 0;
+    //int m_temp2 = 0;
+    //int m_temp3 = 0;
 
     //helpers
     std::chrono::system_clock::time_point m_timeSetClk; //time when set btn was clicked (for smooth blinking)
@@ -194,7 +194,7 @@ protected:
     bool m_sound = false;
     std::chrono::system_clock::time_point m_timeSoundStarted;
     
-    unsigned int m_change_state_ts = 0;
+    unsigned int m_change_state_ts = CHG_ALL_STATES;
 };
 
 #endif

@@ -1,6 +1,6 @@
 CC = g++
-OBJS = ClockData.o Input.o InputButton.o LcdUpdater.o LcdTimeUpdater.o LcdDateUpdater.o LcdAlarmUpdater.o LcdStoperUpdater.o LcdTimerUpdater.o LcdTemp1Updater.o LcdTemp2Updater.o LcdTemp3Updater.o
-DEBUG = -g
+OBJS = ClockData.o Input.o InputButton.o LcdUpdater.o LcdTimeUpdater.o LcdTimeSmallUpdater.o LcdDateUpdater.o LcdAlarmUpdater.o LcdStoperUpdater.o LcdTimerUpdater.o LcdTempUpdater.o
+DEBUG=
 CFLAGS = -Wall -std=c++11 -lwiringPi -lwiringPiDev -pthread -c $(DEBUG)
 LFLAGS = -Wall -std=c++11 -lwiringPi -lwiringPiDev -pthread $(DEBUG)
 
@@ -16,17 +16,14 @@ LcdStoperUpdater.o : LcdStoperUpdater.h LcdStoperUpdater.cpp LcdUpdater.o
 LcdTimerUpdater.o : LcdTimerUpdater.h LcdTimerUpdater.cpp LcdUpdater.o
 	$(CC) $(CFLAGS) LcdTimerUpdater.cpp -o LcdTimerUpdater.o
 
-LcdTemp1Updater.o : LcdTemp1Updater.h LcdTemp1Updater.cpp LcdUpdater.o
-	$(CC) $(CFLAGS) LcdTemp1Updater.cpp -o LcdTemp1Updater.o
-
-LcdTemp2Updater.o : LcdTemp2Updater.h LcdTemp2Updater.cpp LcdUpdater.o
-	$(CC) $(CFLAGS) LcdTemp2Updater.cpp -o LcdTemp2Updater.o
-
-LcdTemp3Updater.o : LcdTemp3Updater.h LcdTemp3Updater.cpp LcdUpdater.o
-	$(CC) $(CFLAGS) LcdTemp3Updater.cpp -o LcdTemp3Updater.o
+LcdTempUpdater.o : LcdTempUpdater.h LcdTempUpdater.cpp LcdUpdater.o
+	$(CC) $(CFLAGS) LcdTempUpdater.cpp -o LcdTempUpdater.o
 
 LcdDateUpdater.o : LcdDateUpdater.h LcdDateUpdater.cpp LcdUpdater.o
 	$(CC) $(CFLAGS) LcdDateUpdater.cpp -o LcdDateUpdater.o
+
+LcdTimeSmallUpdater.o: LcdTimeSmallUpdater.h LcdTimeSmallUpdater.cpp LcdUpdater.o
+	$(CC) $(CFLAGS) LcdTimeSmallUpdater.cpp -o LcdTimeSmallUpdater.o
 
 LcdTimeUpdater.o : LcdTimeUpdater.h LcdTimeUpdater.cpp LcdUpdater.o
 	$(CC) $(CFLAGS) LcdTimeUpdater.cpp -o LcdTimeUpdater.o

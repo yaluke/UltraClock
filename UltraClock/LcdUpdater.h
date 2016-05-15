@@ -22,6 +22,11 @@ public:
     {
         return m_updateBit;
     }
+    void Move(unsigned int a_line, unsigned int a_col)
+    {
+        m_line = a_line;
+        m_col = a_col;
+    }
 protected:
     int m_lcdHandle;
     ClockData &m_data;

@@ -189,64 +189,49 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
     return GetState();
 }
 
-//temperature sensor 1 (internal)
-int ClockData::GetTemp1()
+//temperature sensors
+int ClockData::GetTemp(unsigned int a_idx)
 {
-    ZeroStateBit(CHG_TEMP_1);
-    return m_temp1;
-}
-
-void ClockData::SetTemp1(int a_newTemp)
-{
-    if(a_newTemp != m_temp1)
+    if(a_idx < m_temp.size())
     {
-        m_temp1 = a_newTemp;
-        SetStateBit(CHG_TEMP_1);
+        ZeroStateBit(CHG_TEMP_1 << a_idx);
+        return m_temp[a_idx];
     }
+    return 0;
 }
 
-//temperature sensor 2 & 3 (external)
-int ClockData::GetTemp2()
+void ClockData::SetTemp(unsigned int a_idx, int a_newTemp)
 {
-    ZeroStateBit(CHG_TEMP_2);
-    return m_temp2;
-}
-
-void ClockData::SetTemp2(int a_newTemp)
-{
-    if(a_newTemp != m_temp2)
+    if(a_idx < m_temp.size() && a_newTemp != m_temp[a_idx])
     {
-        m_temp2 = a_newTemp;
-        SetStateBit(CHG_TEMP_2);
-    }
-}
-
-int ClockData::GetTemp3()
-{
-    ZeroStateBit(CHG_TEMP_3);
-    return m_temp3;
-}
-
-void ClockData::SetTemp3(int a_newTemp)
-{
-    if(a_newTemp != m_temp3)
-    {
-        m_temp3 = a_newTemp;
-        SetStateBit(CHG_TEMP_3);
+        m_temp[a_idx] = a_newTemp;
+        SetStateBit(CHG_TEMP_1 << a_idx);
     }
 }
 
 //clock mode/type
-int ClockData::GetClockType()
+void ClockData::ClockTypeModeUpdated()
 {
     ZeroStateBit(CHG_CLOCK_TYPE);
+    ZeroStateBit(CHG_MODE);
+}
+
+int ClockData::GetClockType()
+{
+    //ZeroStateBit(CHG_CLOCK_TYPE);
     return m_clockType;
+}
+
+int ClockData::GetPrevClockType()
+{
+    return m_prevClockType;
 }
 
 void ClockData::SetClockType(int a_newClockType)
 {
     if(a_newClockType != m_clockType)
     {
+        m_prevClockType = m_clockType;
         m_clockType = a_newClockType;
         SetStateBit(CHG_CLOCK_TYPE);
     }
@@ -254,14 +239,20 @@ void ClockData::SetClockType(int a_newClockType)
 
 int ClockData::GetClockMode()
 {
-    ZeroStateBit(CHG_MODE);
+    //ZeroStateBit(CHG_MODE);
     return m_clockMode;
+}
+
+int ClockData::GetPrevClockMode()
+{
+    return m_prevClockMode;
 }
 
 void ClockData::SetClockMode(int a_newClockMode)
 {
     if(a_newClockMode != m_clockMode)
     {
+        m_prevClockMode = m_clockMode;
         m_clockMode = a_newClockMode;
         SetStateBit(CHG_MODE);
     }
@@ -378,6 +369,7 @@ bool ClockData::GetSetShow()
 //mode changer: calls by button - change clock more
 void ClockData::ChangeMode()
 {
+    m_prevClockMode = m_clockMode;
     switch(m_clockType)
     {
         case 0:
@@ -398,6 +390,7 @@ void ClockData::ChangeMode()
 
 void ClockData::ChangeClockType()
 {
+    m_prevClockType = m_clockType;
     m_clockType = (m_clockType+1)%3;
     m_clockMode = 0;
     SetStateBit(CHG_MODE | CHG_CLOCK_TYPE);

@@ -7,15 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1D3F306D1C693069003E018C /* LcdTemp1Updater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D3F306B1C693069003E018C /* LcdTemp1Updater.cpp */; };
+		1D0B8AFA1C84CBEE00BEE70A /* LcdTimeSmallUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D0B8AF81C84CBEE00BEE70A /* LcdTimeSmallUpdater.cpp */; };
 		1D67E5721C59343B00C07FD2 /* clock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5651C59343B00C07FD2 /* clock.cpp */; };
 		1D67E5731C59343B00C07FD2 /* ClockData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5661C59343B00C07FD2 /* ClockData.cpp */; };
 		1D67E5741C59343B00C07FD2 /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5681C59343B00C07FD2 /* Input.cpp */; };
 		1D67E5761C59343B00C07FD2 /* LcdDateUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E56C1C59343B00C07FD2 /* LcdDateUpdater.cpp */; };
 		1D67E5771C59343B00C07FD2 /* LcdTimeUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E56E1C59343B00C07FD2 /* LcdTimeUpdater.cpp */; };
 		1D67E5781C59343B00C07FD2 /* LcdUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5701C59343B00C07FD2 /* LcdUpdater.cpp */; };
-		1DB233EA1C766072004702C6 /* LcdTemp2Updater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB233E81C766072004702C6 /* LcdTemp2Updater.cpp */; };
-		1DB233ED1C766603004702C6 /* LcdTemp3Updater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB233EB1C766603004702C6 /* LcdTemp3Updater.cpp */; };
+		1DB28B971CE501FE002C3FC8 /* LcdTempUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB28B951CE501FE002C3FC8 /* LcdTempUpdater.cpp */; };
 		1DEE41B91C5BD87500618AAC /* InputButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DEE41B81C5BD87500618AAC /* InputButton.cpp */; };
 		1DEE41BC1C5C01C400618AAC /* LcdAlarmUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DEE41BA1C5C01C400618AAC /* LcdAlarmUpdater.cpp */; };
 		1DEE41BF1C5C031D00618AAC /* LcdStoperUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DEE41BD1C5C031D00618AAC /* LcdStoperUpdater.cpp */; };
@@ -35,8 +34,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1D3F306B1C693069003E018C /* LcdTemp1Updater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdTemp1Updater.cpp; sourceTree = "<group>"; };
-		1D3F306C1C693069003E018C /* LcdTemp1Updater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdTemp1Updater.h; sourceTree = "<group>"; };
+		1D0B8AF81C84CBEE00BEE70A /* LcdTimeSmallUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdTimeSmallUpdater.cpp; sourceTree = "<group>"; };
+		1D0B8AF91C84CBEE00BEE70A /* LcdTimeSmallUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdTimeSmallUpdater.h; sourceTree = "<group>"; };
 		1D67E5651C59343B00C07FD2 /* clock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clock.cpp; sourceTree = "<group>"; };
 		1D67E5661C59343B00C07FD2 /* ClockData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClockData.cpp; sourceTree = "<group>"; };
 		1D67E5671C59343B00C07FD2 /* ClockData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClockData.h; sourceTree = "<group>"; };
@@ -49,10 +48,8 @@
 		1D67E5701C59343B00C07FD2 /* LcdUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdUpdater.cpp; sourceTree = "<group>"; };
 		1D67E5711C59343B00C07FD2 /* LcdUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdUpdater.h; sourceTree = "<group>"; };
 		1D8511FD1C59330C000194B6 /* UltraClock */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UltraClock; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DB233E81C766072004702C6 /* LcdTemp2Updater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdTemp2Updater.cpp; sourceTree = "<group>"; };
-		1DB233E91C766072004702C6 /* LcdTemp2Updater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdTemp2Updater.h; sourceTree = "<group>"; };
-		1DB233EB1C766603004702C6 /* LcdTemp3Updater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdTemp3Updater.cpp; sourceTree = "<group>"; };
-		1DB233EC1C766603004702C6 /* LcdTemp3Updater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdTemp3Updater.h; sourceTree = "<group>"; };
+		1DB28B951CE501FE002C3FC8 /* LcdTempUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdTempUpdater.cpp; sourceTree = "<group>"; };
+		1DB28B961CE501FE002C3FC8 /* LcdTempUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdTempUpdater.h; sourceTree = "<group>"; };
 		1DEE41B71C5BD83C00618AAC /* InputButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputButton.h; sourceTree = "<group>"; };
 		1DEE41B81C5BD87500618AAC /* InputButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputButton.cpp; sourceTree = "<group>"; };
 		1DEE41BA1C5C01C400618AAC /* LcdAlarmUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdAlarmUpdater.cpp; sourceTree = "<group>"; };
@@ -93,6 +90,8 @@
 		1D8511FF1C59330C000194B6 /* Src */ = {
 			isa = PBXGroup;
 			children = (
+				1DB28B951CE501FE002C3FC8 /* LcdTempUpdater.cpp */,
+				1DB28B961CE501FE002C3FC8 /* LcdTempUpdater.h */,
 				1D67E5651C59343B00C07FD2 /* clock.cpp */,
 				1D67E5661C59343B00C07FD2 /* ClockData.cpp */,
 				1D67E5671C59343B00C07FD2 /* ClockData.h */,
@@ -112,12 +111,8 @@
 				1DEE41BE1C5C031D00618AAC /* LcdStoperUpdater.h */,
 				1DEE41C01C5C03D100618AAC /* LcdTimerUpdater.cpp */,
 				1DEE41C11C5C03D100618AAC /* LcdTimerUpdater.h */,
-				1D3F306B1C693069003E018C /* LcdTemp1Updater.cpp */,
-				1D3F306C1C693069003E018C /* LcdTemp1Updater.h */,
-				1DB233E81C766072004702C6 /* LcdTemp2Updater.cpp */,
-				1DB233E91C766072004702C6 /* LcdTemp2Updater.h */,
-				1DB233EB1C766603004702C6 /* LcdTemp3Updater.cpp */,
-				1DB233EC1C766603004702C6 /* LcdTemp3Updater.h */,
+				1D0B8AF81C84CBEE00BEE70A /* LcdTimeSmallUpdater.cpp */,
+				1D0B8AF91C84CBEE00BEE70A /* LcdTimeSmallUpdater.h */,
 			);
 			name = Src;
 			path = UltraClock;
@@ -180,18 +175,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D67E5741C59343B00C07FD2 /* Input.cpp in Sources */,
-				1DB233ED1C766603004702C6 /* LcdTemp3Updater.cpp in Sources */,
+				1D0B8AFA1C84CBEE00BEE70A /* LcdTimeSmallUpdater.cpp in Sources */,
 				1DEE41C21C5C03D100618AAC /* LcdTimerUpdater.cpp in Sources */,
 				1D67E5761C59343B00C07FD2 /* LcdDateUpdater.cpp in Sources */,
 				1DEE41BF1C5C031D00618AAC /* LcdStoperUpdater.cpp in Sources */,
-				1DB233EA1C766072004702C6 /* LcdTemp2Updater.cpp in Sources */,
 				1D67E5771C59343B00C07FD2 /* LcdTimeUpdater.cpp in Sources */,
+				1DB28B971CE501FE002C3FC8 /* LcdTempUpdater.cpp in Sources */,
 				1D67E5781C59343B00C07FD2 /* LcdUpdater.cpp in Sources */,
 				1DEE41B91C5BD87500618AAC /* InputButton.cpp in Sources */,
 				1D67E5731C59343B00C07FD2 /* ClockData.cpp in Sources */,
 				1D67E5721C59343B00C07FD2 /* clock.cpp in Sources */,
 				1DEE41BC1C5C01C400618AAC /* LcdAlarmUpdater.cpp in Sources */,
-				1D3F306D1C693069003E018C /* LcdTemp1Updater.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,17 +4,17 @@
 #include <chrono>
 #include <thread>
 #include <vector>
+#include <map>
 #include <fstream>
 #include "ClockData.h"
 #include "InputButton.h"
 #include "LcdTimeUpdater.h"
+#include "LcdTimeSmallUpdater.h"
 #include "LcdDateUpdater.h"
 #include "LcdAlarmUpdater.h"
 #include "LcdStoperUpdater.h"
 #include "LcdTimerUpdater.h"
-#include "LcdTemp1Updater.h"
-#include "LcdTemp2Updater.h"
-#include "LcdTemp3Updater.h"
+#include "LcdTempUpdater.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -45,9 +45,31 @@ int initHardware()
     return fd;
 }
 
+ClockData clock_data;
+int lcdHandler;
+
+LcdTimeUpdater time_updater(lcdHandler, clock_data, CHG_TIME);
+LcdTimeSmallUpdater timeSmall_updater(lcdHandler, clock_data, CHG_TIME);
+LcdDateUpdater date_updater(lcdHandler, clock_data, CHG_DATE);
+LcdAlarmUpdater alarm_updater(lcdHandler, clock_data, CHG_ALARM);
+LcdStoperUpdater stoper_updater(lcdHandler, clock_data, CHG_STOPER);
+LcdTimerUpdater timer_updater(lcdHandler, clock_data, CHG_TIMER);
+LcdTempUpdater temp1_updater(lcdHandler, clock_data, CHG_TEMP_1, 0);
+LcdTempUpdater temp2_updater(lcdHandler, clock_data, CHG_TEMP_2, 1);
+LcdTempUpdater temp3_updater(lcdHandler, clock_data, CHG_TEMP_3, 2);
+
+InputButton btnMode(clock_data, GPIO_BTN_MODE);
+InputButton btnDown(clock_data, GPIO_BTN_DOWN);
+InputButton btnUp(clock_data, GPIO_BTN_UP);
+InputButton btnSet(clock_data, GPIO_BTN_SET);
+InputButton btnClockType(clock_data, GPIO_BTN_CLOCK_TYPE);
+InputButton btnSnooze1(clock_data, GPIO_BTN_SNOOZE_1);
+InputButton btnSnooze2(clock_data, GPIO_BTN_SNOOZE_2);
+
 struct ButtonDef
 {
-    int m_gpio_id;
+    InputButton* m_button;
+    //int m_gpio_id;
     //unsigned int m_change_bit;
     void (ClockData::*Action1)();
     void (ClockData::*Action2)();
@@ -55,6 +77,192 @@ struct ButtonDef
     void (ClockData::*Action4)();
 };
 
+struct LcdUpdaterDef
+{
+    LcdUpdater* m_lcdUpdater;
+    unsigned int m_line;
+    unsigned int m_col;
+};
+
+struct ClockMode
+{
+    std::vector<ButtonDef> m_buttons;
+    std::vector<LcdUpdaterDef> m_lcdUpdaters;
+};
+
+//key = {clock type, clock mode}
+//value = full clock config
+std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
+{
+    {
+        {0, 0},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, nullptr, nullptr, nullptr, nullptr},
+                {&btnUp, nullptr, nullptr, nullptr, nullptr},
+                {&btnSet, nullptr, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
+                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr}
+            },
+            {
+                {&time_updater, 0, 3},
+                {&date_updater, 2, 3},
+                {&temp1_updater, 3, 0},
+                {&temp2_updater, 3, 7},
+                {&temp3_updater, 3, 14}
+            }
+        }
+    },
+    {
+        {0, 1},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, &ClockData::ChangeAlarmHourDown, &ClockData::ChangeAlarmHourDown, nullptr, nullptr},
+                {&btnUp, &ClockData::ChangeAlarmHourUp, &ClockData::ChangeAlarmHourUp, nullptr, nullptr},
+                {&btnSet, &ClockData::ChangeAlarmSet, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
+                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr}
+            },
+            {
+                {&time_updater, 0, 3},
+                {&alarm_updater, 2, 3},
+                {&temp1_updater, 3, 0},
+                {&temp2_updater, 3, 7},
+                {&temp3_updater, 3, 14}
+            }
+        }
+    },
+    {
+        {0, 2},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, &ClockData::ChangeStoperStartStop, nullptr, nullptr, nullptr},
+                {&btnUp, &ClockData::ChangeStoperStartStop, nullptr, nullptr, nullptr},
+                {&btnSet, &ClockData::ChangeStoperSplitReset, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, &ClockData::ChangeStoperStartStop, nullptr, nullptr, nullptr},
+                {&btnSnooze2, &ClockData::ChangeStoperStartStop, nullptr, nullptr, nullptr},
+            },
+            {
+                {&time_updater, 0, 3},
+                {&stoper_updater, 2, 3},
+                {&temp1_updater, 3, 0},
+                {&temp2_updater, 3, 7},
+                {&temp3_updater, 3, 14}
+            }
+        }
+    },
+    {
+        {0, 3},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, &ClockData::ChangeTimerStartStopDown, &ClockData::ChangeTimerStartStopDown, nullptr, nullptr},
+                {&btnUp, &ClockData::ChangeTimerStartStopUp, &ClockData::ChangeTimerStartStopUp, nullptr, nullptr},
+                {&btnSet, &ClockData::ChangeTimerSetReset, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, &ClockData::ChangeTimerStartStop, nullptr, nullptr, nullptr},
+                {&btnSnooze2, &ClockData::ChangeTimerStartStop, nullptr, nullptr, nullptr},            },
+            {
+                {&time_updater, 0, 3},
+                {&timer_updater, 2, 3},
+                {&temp1_updater, 3, 0},
+                {&temp2_updater, 3, 7},
+                {&temp3_updater, 3, 14}
+            }
+        }
+    },
+    {
+        {1, 0},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, nullptr, nullptr, nullptr, nullptr},
+                {&btnUp, nullptr, nullptr, nullptr, nullptr},
+                {&btnSet, nullptr, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
+                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+            {
+                {&temp1_updater, 0, 14},
+                {&temp2_updater, 1, 14},
+                {&temp3_updater, 2, 14},
+                {&timeSmall_updater, 3, 12},
+            }
+        }
+    },
+    {
+        {1, 1},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, nullptr, nullptr, nullptr, nullptr},
+                {&btnUp, nullptr, nullptr, nullptr, nullptr},
+                {&btnSet, nullptr, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
+                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+            {
+                {&timeSmall_updater, 0, 6},
+            }
+        }
+    },
+    {
+        {1, 2},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, nullptr, nullptr, nullptr, nullptr},
+                {&btnUp, nullptr, nullptr, nullptr, nullptr},
+                {&btnSet, nullptr, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
+                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+            {
+                {&timeSmall_updater, 0, 6},
+            }
+        }
+    },
+    {
+        {2, 0},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, nullptr, nullptr, nullptr, nullptr},
+                {&btnUp, nullptr, nullptr, nullptr, nullptr},
+                {&btnSet, nullptr, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
+                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+            {
+                {&timeSmall_updater, 0, 6},
+            }
+        }
+    },
+    {
+        {2, 1},
+        {
+            {
+                {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
+                {&btnDown, nullptr, nullptr, nullptr, nullptr},
+                {&btnUp, nullptr, nullptr, nullptr, nullptr},
+                {&btnSet, nullptr, nullptr, nullptr, nullptr},
+                {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
+                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
+                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+            {
+                {&timeSmall_updater, 0, 6},
+            }
+        }
+    },
+};
+
+/*
 ButtonDef arrButtonData[] {
     //regular clock
     //DateTime Mode
@@ -90,7 +298,7 @@ ButtonDef arrButtonData[] {
     {GPIO_BTN_SNOOZE_1, &ClockData::ChangeTimerStartStop, nullptr, nullptr, nullptr},
     {GPIO_BTN_SNOOZE_2, &ClockData::ChangeTimerStartStop, nullptr, nullptr, nullptr},
     
-    //darkroom multitimer
+    //darkroom multitimer (film development)
     //timer 1
     {GPIO_BTN_MODE, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
     {GPIO_BTN_DOWN, nullptr, nullptr, nullptr, nullptr},
@@ -115,11 +323,14 @@ ButtonDef arrButtonData[] {
     {GPIO_BTN_CLOCK_TYPE, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
     {GPIO_BTN_SNOOZE_1, nullptr, nullptr, nullptr, nullptr},
     {GPIO_BTN_SNOOZE_2, nullptr, nullptr, nullptr, nullptr},
+    
+    //darkroom timer (enlarger timer)
+    //...
 
 };
+ */
 
 //regular
-
 unsigned char char_1[] = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
 unsigned char char_2[] = {0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 unsigned char char_3[] = {0x1f, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
@@ -130,7 +341,7 @@ unsigned char char_7[] = {0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f};
 
 //bold
 /*
-unsigned char char_1[] = {0x01, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03};
+unsigned char char_1[] = {0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03};
 unsigned char char_2[] = {0x1f, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 unsigned char char_3[] = {0x1f, 0x1f, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03};
 unsigned char char_4[] = {0x1f, 0x1f, 0x03, 0x03, 0x03, 0x03, 0x1f, 0x1f};
@@ -165,26 +376,26 @@ void ReadTempThread(ClockData &a_data)
         getline(fileTemp1, strLine);
         string strTemp1(strLine, strLine.find("t=") + 2);
         newVal = stoi(strTemp1);
-        a_data.SetTemp1(newVal);
+        a_data.SetTemp(0, newVal);
         fileTemp2.seekg(0);
         getline(fileTemp2, strLine);
         getline(fileTemp2, strLine);
         string strTemp2(strLine, strLine.find("t=") + 2);
         newVal = stoi(strTemp2);
-        a_data.SetTemp2(newVal);
+        a_data.SetTemp(1, newVal);
         fileTemp3.seekg(0);
         getline(fileTemp3, strLine);
         getline(fileTemp3, strLine);
         string strTemp3(strLine, strLine.find("t=") + 2);
         newVal = stoi(strTemp3);
-        a_data.SetTemp3(newVal);
+        a_data.SetTemp(2, newVal);
         this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 }
 
 int main(void)
 {
-    int lcdHandler = initHardware();
+    lcdHandler = initHardware();
     if(lcdHandler == -1)
     {
         cout << "Init hardware failed! Exiting!" << endl;
@@ -194,72 +405,94 @@ int main(void)
     
     system_clock::time_point now;
     
-    ClockData clock;
-    
-    std::vector<InputButton> vecButtons;
-    for(int i = 0; i < 7; ++i)
-    {
-        vecButtons.push_back(InputButton(clock, arrButtonData[i].m_gpio_id, arrButtonData[i].Action1, arrButtonData[i].Action2, arrButtonData[i].Action3, arrButtonData[i].Action4));
-    }
+//    std::vector<InputButton> vecButtons;
+//    for(int i = 0; i < 7; ++i)
+//    {
+//        vecButtons.push_back(InputButton(clock_data, arrButtonData[i].m_gpio_id, arrButtonData[i].Action1, arrButtonData[i].Action2, arrButtonData[i].Action3, arrButtonData[i].Action4));
+//    }
     
     //init updaters
-    LcdTimeUpdater time_updater(lcdHandler, clock, CHG_TIME, 0, 3);
-    LcdDateUpdater date_updater(lcdHandler, clock, CHG_DATE, 2, 3);
-    LcdAlarmUpdater alarm_updater(lcdHandler, clock, CHG_ALARM, 2, 3);
-    LcdStoperUpdater stoper_updater(lcdHandler, clock, CHG_STOPER, 2, 3);
-    LcdTimerUpdater timer_updater(lcdHandler, clock, CHG_TIMER, 2, 3);
-    LcdTemp1Updater temp1_updater(lcdHandler, clock, CHG_TEMP_1, 3, 0);
-    LcdTemp2Updater temp2_updater(lcdHandler, clock, CHG_TEMP_2, 3, 7);
-    LcdTemp3Updater temp3_updater(lcdHandler, clock, CHG_TEMP_3, 3, 14);
+    //moved to global;
     
     unsigned int updateState = 0;
     
-    thread tempReader(ReadTempThread, ref(clock));
+    thread tempReader(ReadTempThread, ref(clock_data));
     
-    vector<LcdUpdater*> vecUpdaters;
-    vecUpdaters.push_back(&time_updater);
-    vecUpdaters.push_back(&date_updater);
-    vecUpdaters.push_back(&temp1_updater);
-    vecUpdaters.push_back(&temp2_updater);
-    vecUpdaters.push_back(&temp3_updater);
+    //for(ButtonDef& btn : clockConfigMap[std::make_pair<unsigned int, unsigned int>(0, 0)].m_buttons)
+    //{
+    //    btn.m_button->Init(btn.Action1, btn.Action2, btn.Action3, btn.Action4);
+    //}
+    
+    //vector<LcdUpdater*> vecUpdaters;
+    //vecUpdaters.push_back(&time_updater);
+    //vecUpdaters.push_back(&date_updater);
+    //vecUpdaters.push_back(&temp1_updater);
+    //vecUpdaters.push_back(&temp2_updater);
+    //vecUpdaters.push_back(&temp3_updater);
     
     //main program loop
     while(true)
     {
         now = system_clock::now();
         
-        for(InputButton& btn : vecButtons)
+        for(ButtonDef& btn : /*vecButtons*/clockConfigMap[std::make_pair<unsigned int, unsigned int>(clock_data.GetClockType(), clock_data.GetClockMode())].m_buttons)
         {
-            btn.CheckChanges(now);
+            btn.m_button->CheckChanges(now);
         }
         
-        updateState = clock.GetState();
+        updateState = clock_data.GetState();
         
-        digitalWrite(12, clock.GetSound() ? 1 : 0);
+        //show current type&mode
+        lcdPosition(lcdHandler, 0, 0);
+        lcdPrintf(lcdHandler, "%1u%1u", clock_data.GetClockType(), clock_data.GetClockMode());
         
-        //show clock type & mode
-        //lcdPosition(lcdHandler, 18, 0);
-        //lcdPrintf(lcdHandler, "%u%u", clock.GetClockType(), clock.GetClockMode());
+        digitalWrite(12, clock_data.GetSound() ? 1 : 0);
         
-        if(updateState & CHG_MODE)
+        //show update state
+        //lcdPosition(lcdHandler, 16, 0);
+        //lcdPrintf(lcdHandler, "%4u", updateState);
+        
+        if(updateState & CHG_MODE || updateState & CHG_CLOCK_TYPE)
         {
-            int start = clock.GetClockMode()*7;
-            for(int i = 0; i < 7; ++i)
+            //clean prev data
+            //for(LcdUpdaterDef& pUpd: clockConfigMap[make_pair<unsigned int, unsigned int>(clock_data.GetPrevClockType(), clock_data.GetPrevClockMode())].m_lcdUpdaters)
+            //{
+            //    pUpd.m_lcdUpdater->Clean();
+            //}
+            //reinitialize + clean whole screen
+            //lcdHandler = initHardware(); //doesn't work (crashes after few changes)
+            lcdClear(lcdHandler);
+            lcdCursor(lcdHandler, false);
+            lcdCursorBlink(lcdHandler, false);
+            DefineCustomChars(lcdHandler);
+            //lcdDisplay(lcdHandler, false); //turns off the lcd
+            //set actions
+            for(ButtonDef& btn : clockConfigMap[std::make_pair<unsigned int, unsigned int>(clock_data.GetClockType(), clock_data.GetClockMode())].m_buttons)
             {
-                vecButtons[i].Action1 = arrButtonData[start+i].Action1;
-                vecButtons[i].Action2 = arrButtonData[start+i].Action2;
-                vecButtons[i].Action3 = arrButtonData[start+i].Action3;
-                vecButtons[i].Action4 = arrButtonData[start+i].Action4;
+                btn.m_button->Init(btn.Action1, btn.Action2, btn.Action3, btn.Action4);
             }
+            //move lcdupdaters
             
-            for(LcdUpdater* pUpd : vecUpdaters)
-            {
-                pUpd->Clean();
-            }
+            //int start = clock_data.GetClockMode()*7;
+            //for(int i = 0; i < 7; ++i)
+            //{
+            //    vecButtons[i].Action1 = arrButtonData[start+i].Action1;
+            //    vecButtons[i].Action2 = arrButtonData[start+i].Action2;
+            //    vecButtons[i].Action3 = arrButtonData[start+i].Action3;
+            //    vecButtons[i].Action4 = arrButtonData[start+i].Action4;
+            //}
             
-            vecUpdaters.clear();
-            switch(clock.GetClockMode())
+            //for(LcdUpdater* pUpd : vecUpdaters)
+            //{
+            //    pUpd->Clean();
+            //}
+            
+            //vecUpdaters.clear();
+            /*switch(clock_data.GetClockType())
             {
+            case 0:
+                switch(clock_data.GetClockMode())
+                {
                 case 0:
                     vecUpdaters.push_back(&time_updater);
                     vecUpdaters.push_back(&date_updater);
@@ -288,26 +521,46 @@ int main(void)
                     vecUpdaters.push_back(&temp2_updater);
                     vecUpdaters.push_back(&temp3_updater);
                     break;
+                }
+                break;
+            case 1:
+                switch(clock_data.GetClockMode())
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
+                break;
             }
-            for(LcdUpdater* pUpd: vecUpdaters)
+             */
+            for(LcdUpdaterDef& pUpd: /*vecUpdaters*/clockConfigMap[make_pair<unsigned int, unsigned int>(clock_data.GetClockType(), clock_data.GetClockMode())].m_lcdUpdaters)
             {
-                clock.SetStateBit(pUpd->GetUpdateBit());
+                pUpd.m_lcdUpdater->Move(pUpd.m_line, pUpd.m_col);
+                clock_data.SetStateBit(pUpd.m_lcdUpdater->GetUpdateBit());
             }
+            
+            clock_data.ClockTypeModeUpdated();
         }
         
         
-        updateState = clock.CheckChanges(now);
+        updateState = clock_data.CheckChanges(now);
         
         //show clock update state
         //lcdPosition(lcdHandler, 0, 0);
         //lcdPrintf(lcdHandler, "%03u", updateState);
 
+        //show current type&mode
+        //lcdPosition(lcdHandler, 0, 0);
+        //lcdPrintf(lcdHandler, "%1u%1u", clock_data.GetClockType(), clock_data.GetClockMode());
         
-        for(LcdUpdater* pUpd: vecUpdaters)
+        for(LcdUpdaterDef& pUpd: /*vecUpdaters*/clockConfigMap[make_pair<unsigned int, unsigned int>(clock_data.GetClockType(), clock_data.GetClockMode())].m_lcdUpdaters)
         {
-            if(updateState & pUpd->GetUpdateBit())
+            if(updateState & pUpd.m_lcdUpdater->GetUpdateBit())
             {
-                pUpd->Update();
+                pUpd.m_lcdUpdater->Update();
             }
         }
         this_thread::sleep_for(std::chrono::milliseconds(50));
