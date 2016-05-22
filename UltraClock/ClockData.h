@@ -17,7 +17,8 @@
 #define CHG_TEMP_2          128
 #define CHG_TEMP_3          256
 #define CHG_CLOCK_TYPE      512
-#define CHG_ALL_STATES      1023
+#define CHG_LOG_TIMER       1024
+#define CHG_ALL_STATES      2047
 
 enum eClockMode
 {
@@ -114,6 +115,27 @@ public:
     bool GetTimerShowColons();
     int GetTimerSetIdx();
 
+    //log timer
+    enum LogTimerStep
+    {
+        Step1_12 = 0,
+        Step1_6 = 1,
+        Step1_3 = 2,
+        Step1 = 3
+    };
+    struct LogTimerData
+    {
+        int m_timeLogTimerSecond = 0;
+        int m_timeLogTimerDeci = 0;
+        LogTimerStep m_timeLogStep = Step1_3;
+    };
+    
+    LogTimerData GetLogTimerData();
+    LogTimerData GetLogTimerDataInit();
+    bool GetLogTimerShowDot();
+    int GetLogTimerSetIdx();
+    
+    
     //sounds
     void StartSound(std::chrono::system_clock::time_point a_now, eSoundType a_type = eSoundType::eBip);
     void StopSound();
@@ -137,6 +159,11 @@ public:
     void ChangeTimerStartStopDown();
     void ChangeTimerSetReset();
 
+    //Log timer changers
+    void ChangeLogTimerStartStop();
+    void ChangeLogTimerStartStopUp();
+    void ChangeLogTimerStartStopDown();
+    void ChangeLogTimerSetReset();
     
     //state bit - thread safe
     unsigned int GetState();
@@ -177,6 +204,20 @@ protected:
     
     eTimerStatus m_timerStatus = eTimerStatus::eZero;
     
+    //log timer data
+    LogTimerData m_timeLogTimerData;
+    LogTimerData m_timeLogTimerDataInit;
+    
+    int m_timeLogTimerSetIdx = 0;
+    bool m_timerLogShowDot = true;
+    
+    std::chrono::duration<double, std::milli> m_timerLogTime;
+    std::chrono::system_clock::time_point m_timerLogLastStop;
+    std::chrono::system_clock::time_point m_timerLogNow;
+    
+    eTimerStatus m_timerLogStatus = eTimerStatus::eZero;
+    
+    //temperature
     std::array<int, 3> m_temp = {{0}};
     //temperature from sensor 1 (internal)
     //int m_temp1 = 0;

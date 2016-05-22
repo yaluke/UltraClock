@@ -14,6 +14,7 @@
 #include "LcdAlarmUpdater.h"
 #include "LcdStoperUpdater.h"
 #include "LcdTimerUpdater.h"
+#include "LcdLogTimerUpdater.h"
 #include "LcdTempUpdater.h"
 
 using namespace std;
@@ -54,6 +55,7 @@ LcdDateUpdater date_updater(lcdHandler, clock_data, CHG_DATE);
 LcdAlarmUpdater alarm_updater(lcdHandler, clock_data, CHG_ALARM);
 LcdStoperUpdater stoper_updater(lcdHandler, clock_data, CHG_STOPER);
 LcdTimerUpdater timer_updater(lcdHandler, clock_data, CHG_TIMER);
+LcdLogTimerUpdater log_timer_updater(lcdHandler, clock_data, CHG_LOG_TIMER);
 LcdTempUpdater temp1_updater(lcdHandler, clock_data, CHG_TEMP_1, 0);
 LcdTempUpdater temp2_updater(lcdHandler, clock_data, CHG_TEMP_2, 1);
 LcdTempUpdater temp3_updater(lcdHandler, clock_data, CHG_TEMP_3, 2);
@@ -224,7 +226,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
                 {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
             {
-                {&timeSmall_updater, 0, 6},
+                {&timeSmall_updater, 3, 6},
             }
         }
     },
@@ -233,14 +235,15 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
         {
             {
                 {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
-                {&btnDown, nullptr, nullptr, nullptr, nullptr},
-                {&btnUp, nullptr, nullptr, nullptr, nullptr},
-                {&btnSet, nullptr, nullptr, nullptr, nullptr},
+                {&btnDown, &ClockData::ChangeLogTimerStartStopDown, &ClockData::ChangeLogTimerStartStopDown, nullptr, nullptr},
+                {&btnUp, &ClockData::ChangeLogTimerStartStopUp, &ClockData::ChangeLogTimerStartStopUp, nullptr, nullptr},
+                {&btnSet, &ClockData::ChangeLogTimerSetReset, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
-                {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
-                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+                {&btnSnooze1, &ClockData::ChangeLogTimerStartStop, nullptr, nullptr, nullptr},
+                {&btnSnooze2, &ClockData::ChangeLogTimerStartStop, nullptr, nullptr, nullptr},            },
             {
-                {&timeSmall_updater, 0, 6},
+                {&log_timer_updater, 0, 4},
+                {&timeSmall_updater, 3, 6},
             }
         }
     },
@@ -442,9 +445,6 @@ int main(void)
         
         updateState = clock_data.GetState();
         
-        //show current type&mode
-        lcdPosition(lcdHandler, 0, 0);
-        lcdPrintf(lcdHandler, "%1u%1u", clock_data.GetClockType(), clock_data.GetClockMode());
         
         digitalWrite(12, clock_data.GetSound() ? 1 : 0);
         
@@ -466,6 +466,12 @@ int main(void)
             lcdCursorBlink(lcdHandler, false);
             DefineCustomChars(lcdHandler);
             //lcdDisplay(lcdHandler, false); //turns off the lcd
+            
+            //show current type&mode
+            lcdPosition(lcdHandler, 0, 0);
+            lcdPrintf(lcdHandler, "%1u%1u", clock_data.GetClockType(), clock_data.GetClockMode());
+
+        
             //set actions
             for(ButtonDef& btn : clockConfigMap[std::make_pair<unsigned int, unsigned int>(clock_data.GetClockType(), clock_data.GetClockMode())].m_buttons)
             {

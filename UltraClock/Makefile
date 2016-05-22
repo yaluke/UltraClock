@@ -1,5 +1,5 @@
 CC = g++
-OBJS = ClockData.o Input.o InputButton.o LcdUpdater.o LcdTimeUpdater.o LcdTimeSmallUpdater.o LcdDateUpdater.o LcdAlarmUpdater.o LcdStoperUpdater.o LcdTimerUpdater.o LcdTempUpdater.o
+OBJS = ClockData.o Input.o InputButton.o LcdUpdater.o LcdTimeUpdater.o LcdLogTimerUpdater.o LcdTimeSmallUpdater.o LcdDateUpdater.o LcdAlarmUpdater.o LcdStoperUpdater.o LcdTimerUpdater.o LcdTempUpdater.o
 DEBUG=
 CFLAGS = -Wall -std=c++11 -lwiringPi -lwiringPiDev -pthread -c $(DEBUG)
 LFLAGS = -Wall -std=c++11 -lwiringPi -lwiringPiDev -pthread $(DEBUG)
@@ -15,6 +15,9 @@ LcdStoperUpdater.o : LcdStoperUpdater.h LcdStoperUpdater.cpp LcdUpdater.o
 
 LcdTimerUpdater.o : LcdTimerUpdater.h LcdTimerUpdater.cpp LcdUpdater.o
 	$(CC) $(CFLAGS) LcdTimerUpdater.cpp -o LcdTimerUpdater.o
+
+LcdLogTimerUpdater.o : LcdLogTimerUpdater.h LcdLogTimerUpdater.cpp LcdUpdater.o
+	$(CC) $(CFLAGS) LcdLogTimerUpdater.cpp -o LcdLogTimerUpdater.o
 
 LcdTempUpdater.o : LcdTempUpdater.h LcdTempUpdater.cpp LcdUpdater.o
 	$(CC) $(CFLAGS) LcdTempUpdater.cpp -o LcdTempUpdater.o

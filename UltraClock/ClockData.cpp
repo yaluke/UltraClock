@@ -80,6 +80,38 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
         
     }
     
+    if(m_timeLogTimerSetIdx != 0)
+    {
+        auto time1 = a_now - m_timeSetClk;
+        duration<double, milli> time2(time1);
+        int time3 = ((int)time2.count())%1000;
+        
+        if(m_setShow)
+        {
+            if( time3 > 600 )
+            {
+                m_setShow = false;
+                SetStateBit(CHG_LOG_TIMER);
+            }
+        }
+        else
+        {
+            if( time3 < 600 )
+            {
+                m_setShow = true;
+                SetStateBit(CHG_LOG_TIMER);
+            }
+        }
+        
+        if(time2.count() > 15000)
+        {
+            m_setShow = true;
+            m_timeLogTimerSetIdx = 0;
+            SetStateBit(CHG_LOG_TIMER);
+        }
+        
+    }
+    
     if(m_eSound != eSoundType::eNone)
     {
         auto time1 = a_now - m_timeSoundStarted;
@@ -185,7 +217,34 @@ int ClockData::CheckChanges(system_clock::time_point a_now)
             SetStateBit(CHG_TIMER);
         }
     }
-  
+
+    //log timer updater
+    if( m_timerLogStatus == eTimerStatus::eStarted )
+    {
+        duration<double, milli> timerTime = m_timerLogTime + (a_now - m_timerLogLastStop);
+        long tmp = m_timeLogTimerDataInit.m_timeLogTimerSecond*10 + m_timeLogTimerDataInit.m_timeLogTimerDeci;
+        long decis = tmp - timerTime.count()/100;
+        if( decis <= 0)
+        {
+            m_timeLogTimerData.m_timeLogTimerDeci = 0;
+            m_timerLogStatus = eTimerStatus::eEnded;
+            m_timerLogShowDot = true;
+            SetStateBit(CHG_LOG_TIMER);
+        }
+        else if( (decis%10) != m_timeLogTimerData.m_timeLogTimerDeci )
+        {
+            m_timeLogTimerData.m_timeLogTimerDeci = decis%10;
+            m_timeLogTimerData.m_timeLogTimerSecond = (decis/10)%60;
+            m_timerLogShowDot = decis%10 < 5;
+            SetStateBit(CHG_LOG_TIMER);
+        }
+        else if(m_timerLogShowDot != (decis%10 < 5) )
+        {
+            m_timerLogShowDot = decis%10 < 5;
+            SetStateBit(CHG_LOG_TIMER);
+        }
+    }
+
     return GetState();
 }
 
@@ -341,6 +400,29 @@ int ClockData::GetTimerSetIdx()
     return m_timeTimerSetIdx;
 }
 
+//log timer
+ClockData::LogTimerData ClockData::GetLogTimerData()
+{
+    ZeroStateBit(CHG_LOG_TIMER);
+    return m_timeLogTimerData;
+}
+
+ClockData::LogTimerData ClockData::GetLogTimerDataInit()
+{
+    ZeroStateBit(CHG_LOG_TIMER);
+    return m_timeLogTimerDataInit;
+}
+
+bool ClockData::GetLogTimerShowDot()
+{
+    return m_timerLogShowDot;
+}
+
+int ClockData::GetLogTimerSetIdx()
+{
+    return m_timeLogTimerSetIdx;
+}
+
 //sound
 void ClockData::StartSound(std::chrono::system_clock::time_point a_now, eSoundType a_type)
 {
@@ -376,8 +458,8 @@ void ClockData::ChangeMode()
             m_clockMode = (m_clockMode+1)%4;
             m_timeAlarmSetIdx= 0;
             m_timeTimerSetIdx = 0;
+            m_timeLogTimerSetIdx = 0;
             m_setShow = true;
-            SetStateBit(CHG_MODE);
             break;
         case 1:
             m_clockMode = (m_clockMode+1)%3;
@@ -386,6 +468,7 @@ void ClockData::ChangeMode()
             m_clockMode = (m_clockMode+1)%2;
             break;
     }
+    SetStateBit(CHG_MODE);
 }
 
 void ClockData::ChangeClockType()
@@ -393,6 +476,9 @@ void ClockData::ChangeClockType()
     m_prevClockType = m_clockType;
     m_clockType = (m_clockType+1)%3;
     m_clockMode = 0;
+    m_timeAlarmSetIdx= 0;
+    m_timeTimerSetIdx = 0;
+    m_timeLogTimerSetIdx = 0;
     SetStateBit(CHG_MODE | CHG_CLOCK_TYPE);
 }
 
@@ -631,6 +717,114 @@ void ClockData::ChangeTimerSetReset()
             m_timeTimerData.m_timeTimerSecond = m_timeTimerDataInit.m_timeTimerSecond;
             m_timerShowColons = true;
             SetStateBit(CHG_TIMER);
+            break;
+            
+    }
+}
+
+//log timer changers
+void ClockData::ChangeLogTimerStartStop()
+{
+    if(!m_timeLogTimerSetIdx)
+    {
+        switch(m_timerLogStatus)
+        {
+            case eTimerStatus::eZero:
+                m_timerLogTime = std::chrono::duration<double, std::milli>::zero();
+                m_timerLogLastStop = std::chrono::system_clock::now();
+                m_timerLogStatus = eTimerStatus::eStarted;
+                //start
+                break;
+            case eTimerStatus::eStarted:
+                m_timerLogStatus = eTimerStatus::eStopped;
+                m_timerLogNow = std::chrono::system_clock::now();
+                m_timerLogTime += (m_timerLogNow - m_timerLogLastStop);
+                m_timerLogShowDot = true;
+                SetStateBit(CHG_LOG_TIMER);
+                break;
+            case eTimerStatus::eStopped:
+                m_timerLogStatus = eTimerStatus::eStarted;
+                m_timerLogLastStop = std::chrono::system_clock::now();
+                break;
+            case eTimerStatus::eEnded:
+                //do nothing
+                break;
+        }
+    }
+}
+
+void ClockData::ChangeLogTimerStartStopUp()
+{
+    if(!m_timeLogTimerSetIdx)
+    {
+        ChangeLogTimerStartStop();
+    }
+    else
+    {
+        switch(m_timeLogTimerSetIdx)
+        {
+            case 1: //seconds - from predefined set base on step
+                m_timeLogTimerData.m_timeLogTimerSecond = m_timeLogTimerDataInit.m_timeLogTimerSecond = (m_timeLogTimerData.m_timeLogTimerSecond + 1)%256;
+                SetStateBit(CHG_LOG_TIMER);
+                m_timeSetClk = std::chrono::system_clock::now();
+                break;
+            case 2:
+                SetStateBit(CHG_LOG_TIMER);
+                m_timeSetClk = std::chrono::system_clock::now();
+                break;
+        }
+    }
+    
+}
+
+void ClockData::ChangeLogTimerStartStopDown()
+{
+    if(!m_timeLogTimerSetIdx)
+    {
+        ChangeTimerStartStop();
+    }
+    else
+    {
+        switch(m_timeLogTimerSetIdx)
+        {
+            case 1:
+                m_timeLogTimerData.m_timeLogTimerSecond = m_timeLogTimerDataInit.m_timeLogTimerSecond = m_timeLogTimerData.m_timeLogTimerSecond ? (m_timeLogTimerData.m_timeLogTimerSecond - 1) : 256;
+                SetStateBit(CHG_LOG_TIMER);
+                m_timeSetClk = std::chrono::system_clock::now();
+                break;
+            case 2:
+                SetStateBit(CHG_LOG_TIMER);
+                m_timeSetClk = std::chrono::system_clock::now();
+                break;
+        }
+    }
+    
+}
+
+void ClockData::ChangeLogTimerSetReset()
+{
+    switch(m_timerLogStatus)
+    {
+        case eTimerStatus::eZero:
+            m_timeLogTimerSetIdx = (m_timeLogTimerSetIdx+1)%2;
+            if(m_timeLogTimerSetIdx)
+            {
+                m_timeSetClk = std::chrono::system_clock::now();
+            }
+            else if(!m_setShow)
+            {
+                m_setShow = true;
+                SetStateBit(CHG_LOG_TIMER);
+            }
+            break;
+        case eTimerStatus::eEnded:
+        case eTimerStatus::eStopped:
+        case eTimerStatus::eStarted:
+            m_timerLogStatus = eTimerStatus::eZero;
+            m_timeLogTimerData.m_timeLogTimerSecond = m_timeLogTimerDataInit.m_timeLogTimerSecond;
+            m_timeLogTimerData.m_timeLogTimerDeci = m_timeLogTimerDataInit.m_timeLogTimerDeci;
+            m_timerLogShowDot = true;
+            SetStateBit(CHG_LOG_TIMER);
             break;
             
     }
