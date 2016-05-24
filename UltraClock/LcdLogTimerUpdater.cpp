@@ -6,36 +6,70 @@
 
 using namespace std;
 
+string step(ClockData::LogTimerStep s)
+{
+    string str;
+    switch(s)
+    {
+        case ClockData::Step1_12:
+            str =  "1/12-s";
+            break;
+        case ClockData::Step1_6:
+            str = " 1/6-s";
+            break;
+        case ClockData::Step1_3:
+            str = " 1/3-s";
+            break;
+        case ClockData::Step1:
+            str = "   1-s";
+            break;
+    }
+    return str;
+}
+
 void LcdLogTimerUpdater::Update()
 {
     lcdPosition(m_lcdHandle, m_col, m_line);
     stringstream ss;
+    string str;
     char chDot = m_data.GetLogTimerShowDot() ? '.' : ' ';
     ClockData::LogTimerData timerData = m_data.GetLogTimerData();
     switch( m_data.GetLogTimerSetIdx() )
     {
         case 0:
-            ss << setw(3) << to_string(timerData.m_timeLogTimerSecond) << chDot << to_string(timerData.m_timeLogTimerDeci);
+            ss << setw(3) << to_string(timerData.m_timeLogTimerSecond) << chDot << to_string(timerData.m_timeLogTimerDeci) << "s";
+            str = step(timerData.m_timeLogStep);
             break;
         case 1:
             if(m_data.GetSetShow())
             {
-                ss << setw(3) << to_string(timerData.m_timeLogTimerSecond) << "." << to_string(timerData.m_timeLogTimerDeci);
+                ss << setw(3) << to_string(timerData.m_timeLogTimerSecond) << "." << to_string(timerData.m_timeLogTimerDeci) << "s";
             }
             else
             {
-                ss << "     ";
+                ss << "      ";
             }
+            str = step(timerData.m_timeLogStep);
             break;
         case 2:
-//todo: second line
+            ss << setw(3) << to_string(timerData.m_timeLogTimerSecond) << "." << to_string(timerData.m_timeLogTimerDeci) << "s";
+            if(m_data.GetSetShow())
+            {
+                str = step(timerData.m_timeLogStep);
+            }
+            else
+            {
+                str = "      ";
+            }
             break;
     }
     lcdPuts(m_lcdHandle, ss.str().c_str());
+    lcdPosition(m_lcdHandle, m_col, m_line+1);
+    lcdPuts(m_lcdHandle, str.c_str());
 }
 
 void LcdLogTimerUpdater::Clean()
 {
     lcdPosition(m_lcdHandle, m_col, m_line);
-    lcdPrintf(m_lcdHandle, "     ");
+    lcdPrintf(m_lcdHandle, "      ");
 }

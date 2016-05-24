@@ -41,7 +41,14 @@ int initHardware()
     pinMode(GPIO_BTN_CLOCK_TYPE, INPUT);
     pinMode(GPIO_BTN_SNOOZE_1, INPUT);
     pinMode(GPIO_BTN_SNOOZE_2, INPUT);
-    pinMode(12, OUTPUT);
+    
+    //other inputs
+    pinMode(12, OUTPUT);    //buzzer
+    pinMode(20, OUTPUT);    //enlarger
+    pinMode(21, OUTPUT);    //safelight
+    
+    digitalWrite(20, 1);
+    digitalWrite(21, 0);
     
     return fd;
 }
@@ -235,8 +242,8 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
         {
             {
                 {&btnMode, &ClockData::ChangeMode, nullptr, nullptr, nullptr},
-                {&btnDown, &ClockData::ChangeLogTimerStartStopDown, &ClockData::ChangeLogTimerStartStopDown, nullptr, nullptr},
-                {&btnUp, &ClockData::ChangeLogTimerStartStopUp, &ClockData::ChangeLogTimerStartStopUp, nullptr, nullptr},
+                {&btnDown, &ClockData::ChangeLogTimerDown, &ClockData::ChangeLogTimerDown, nullptr, nullptr},
+                {&btnUp, &ClockData::ChangeLogTimerUp, &ClockData::ChangeLogTimerUp, nullptr, nullptr},
                 {&btnSet, &ClockData::ChangeLogTimerSetReset, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, &ClockData::ChangeLogTimerStartStop, nullptr, nullptr, nullptr},

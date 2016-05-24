@@ -118,15 +118,16 @@ public:
     //log timer
     enum LogTimerStep
     {
-        Step1_12 = 0,
-        Step1_6 = 1,
-        Step1_3 = 2,
-        Step1 = 3
+        Step1_12 = 1,
+        Step1_6 = 2,
+        Step1_3 = 4,
+        Step1 = 12
     };
     struct LogTimerData
     {
-        int m_timeLogTimerSecond = 0;
+        int m_timeLogTimerSecond = 8;
         int m_timeLogTimerDeci = 0;
+        int m_timeLogId = 0;
         LogTimerStep m_timeLogStep = Step1_3;
     };
     
@@ -161,9 +162,10 @@ public:
 
     //Log timer changers
     void ChangeLogTimerStartStop();
-    void ChangeLogTimerStartStopUp();
-    void ChangeLogTimerStartStopDown();
+    void ChangeLogTimerUp();
+    void ChangeLogTimerDown();
     void ChangeLogTimerSetReset();
+    void ChangeLights();
     
     //state bit - thread safe
     unsigned int GetState();
@@ -216,6 +218,7 @@ protected:
     std::chrono::system_clock::time_point m_timerLogNow;
     
     eTimerStatus m_timerLogStatus = eTimerStatus::eZero;
+    int m_enlargerState = 1;
     
     //temperature
     std::array<int, 3> m_temp = {{0}};
