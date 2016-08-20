@@ -428,6 +428,34 @@ int ClockData::GetLogTimerSetIdx()
     return m_timeLogTimerSetIdx;
 }
 
+//double log timer
+ClockData::DoubleLogTimerData ClockData::GetDoubleLogTimerData()
+{
+    ZeroStateBit(CHG_DBL_LOG_TIMER);
+    return m_timeDoubleLogTimerData;
+}
+
+ClockData::DoubleLogTimerData ClockData::GetDoubleLogTimerDataInit()
+{
+    ZeroStateBit(CHG_DBL_LOG_TIMER);
+    return m_timeDoubleLogTimerDataInit;
+}
+
+bool ClockData::GetDoubleLogTimerShowDot1()
+{
+    return m_timerDoubleLogShowDot1;
+}
+
+bool ClockData::GetDoubleLogTimerShowDot2()
+{
+    return m_timerDoubleLogShowDot2;
+}
+
+int ClockData::GetDoubleLogTimerSetIdx()
+{
+    return m_timeDoubleLogTimerSetIdx;
+}
+
 //sound
 void ClockData::StartSound(std::chrono::system_clock::time_point a_now, eSoundType a_type)
 {
@@ -450,6 +478,23 @@ bool ClockData::GetSound()
 bool ClockData::GetSetShow()
 {
     return m_setShow;
+}
+
+bool ClockData::GetLcdOn()
+{
+    ZeroStateBit(CHG_LCD_ON);
+    return m_lcdOn;
+}
+
+void ClockData::SetLcdOn(bool a_value)
+{
+    m_lcdOn = a_value;
+}
+
+void ClockData::ChangeLcdOn()
+{
+    m_lcdOn = !m_lcdOn;
+    SetStateBit(CHG_LCD_ON);
 }
 
 //changers

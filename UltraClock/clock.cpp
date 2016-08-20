@@ -113,7 +113,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, nullptr, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
-                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr}
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr}
             },
             {
                 {&time_updater, 0, 3},
@@ -134,7 +134,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, &ClockData::ChangeAlarmSet, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
-                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr}
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr}
             },
             {
                 {&time_updater, 0, 3},
@@ -155,7 +155,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, &ClockData::ChangeStoperSplitReset, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, &ClockData::ChangeStoperStartStop, nullptr, nullptr, nullptr},
-                {&btnSnooze2, &ClockData::ChangeStoperStartStop, nullptr, nullptr, nullptr},
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr},
             },
             {
                 {&time_updater, 0, 3},
@@ -176,7 +176,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, &ClockData::ChangeTimerSetReset, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, &ClockData::ChangeTimerStartStop, nullptr, nullptr, nullptr},
-                {&btnSnooze2, &ClockData::ChangeTimerStartStop, nullptr, nullptr, nullptr},            },
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr},            },
             {
                 {&time_updater, 0, 3},
                 {&timer_updater, 2, 3},
@@ -196,7 +196,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, nullptr, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
-                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr},            },
             {
                 {&temp1_updater, 0, 14},
                 {&temp2_updater, 1, 14},
@@ -215,7 +215,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, nullptr, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
-                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr},            },
             {
                 {&timeSmall_updater, 0, 6},
             }
@@ -231,7 +231,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, nullptr, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
-                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr},            },
             {
                 {&timeSmall_updater, 3, 6},
             }
@@ -247,7 +247,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, &ClockData::ChangeLogTimerSetReset, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, &ClockData::ChangeLogTimerStartStop, nullptr, nullptr, nullptr},
-                {&btnSnooze2, &ClockData::ChangeLogTimerStartStop, nullptr, nullptr, nullptr},            },
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr},            },
             {
                 {&log_timer_updater, 0, 4},
                 {&timeSmall_updater, 3, 6},
@@ -264,7 +264,7 @@ std::map<std::pair<unsigned int, unsigned int>, ClockMode> clockConfigMap =
                 {&btnSet, nullptr, nullptr, nullptr, nullptr},
                 {&btnClockType, &ClockData::ChangeClockType, nullptr, nullptr, nullptr},
                 {&btnSnooze1, nullptr, nullptr, nullptr, nullptr},
-                {&btnSnooze2, nullptr, nullptr, nullptr, nullptr},            },
+                {&btnSnooze2, &ClockData::ChangeLcdOn, nullptr, nullptr, nullptr},            },
             {
                 {&timeSmall_updater, 0, 6},
             }
@@ -452,14 +452,17 @@ int main(void)
         
         updateState = clock_data.GetState();
         
-        
         digitalWrite(12, clock_data.GetSound() ? 1 : 0);
         
+        if(updateState & CHG_LCD_ON)
+        {
+            lcdDisplay(lcdHandler, clock_data.GetLcdOn());
+        }
         //show update state
         //lcdPosition(lcdHandler, 16, 0);
         //lcdPrintf(lcdHandler, "%4u", updateState);
         
-        if(updateState & CHG_MODE || updateState & CHG_CLOCK_TYPE)
+        if(clock_data.GetLcdOn() && (updateState & CHG_MODE || updateState & CHG_CLOCK_TYPE))
         {
             //clean prev data
             //for(LcdUpdaterDef& pUpd: clockConfigMap[make_pair<unsigned int, unsigned int>(clock_data.GetPrevClockType(), clock_data.GetPrevClockMode())].m_lcdUpdaters)

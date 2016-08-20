@@ -18,7 +18,9 @@
 #define CHG_TEMP_3          256
 #define CHG_CLOCK_TYPE      512
 #define CHG_LOG_TIMER       1024
-#define CHG_ALL_STATES      2047
+#define CHG_DBL_LOG_TIMER   2048
+#define CHG_LCD_ON          4096
+#define CHG_ALL_STATES      8191
 
 enum eClockMode
 {
@@ -130,13 +132,29 @@ public:
         int m_timeLogId = 0;
         LogTimerStep m_timeLogStep = Step1_3;
     };
-    
     LogTimerData GetLogTimerData();
     LogTimerData GetLogTimerDataInit();
     bool GetLogTimerShowDot();
     int GetLogTimerSetIdx();
     
-    
+    //double log timer
+    struct DoubleLogTimerData
+    {
+        int m_timeDoubleLogTimer1Second = 8;
+        int m_timeDoubleLogTimer1Deci = 0;
+        int m_timeDoubleLog1Id = 0;
+        int m_timeDoubleLogTimer2Second = 8;
+        int m_timeDoubleLogTimer2Deci = 0;
+        int m_timeDoubleLog2Id = 0;
+        LogTimerStep m_timeDoubleLogStep = Step1_3;
+    };
+
+    DoubleLogTimerData GetDoubleLogTimerData();
+    DoubleLogTimerData GetDoubleLogTimerDataInit();
+    bool GetDoubleLogTimerShowDot1();
+    bool GetDoubleLogTimerShowDot2();
+    int GetDoubleLogTimerSetIdx();
+
     //sounds
     void StartSound(std::chrono::system_clock::time_point a_now, eSoundType a_type = eSoundType::eBip);
     void StopSound();
@@ -171,6 +189,13 @@ public:
     unsigned int GetState();
     void SetStateBit(unsigned int a_changeBit);
     void ZeroStateBit(unsigned int a_changeBit);
+    
+    //lcd on/off
+    bool GetLcdOn();
+    void SetLcdOn(bool a_value);
+    
+    //lcd on/off changer
+    void ChangeLcdOn();
     
 protected:
 
@@ -215,10 +240,23 @@ protected:
     
     std::chrono::duration<double, std::milli> m_timerLogTime;
     std::chrono::system_clock::time_point m_timerLogLastStop;
-    std::chrono::system_clock::time_point m_timerLogNow;
+    //std::chrono::system_clock::time_point m_timerLogNow;  //unused
     
     eTimerStatus m_timerLogStatus = eTimerStatus::eZero;
     int m_enlargerState = 1;
+    
+    //double log timer data
+    DoubleLogTimerData m_timeDoubleLogTimerData;
+    DoubleLogTimerData m_timeDoubleLogTimerDataInit;
+    
+    int m_timeDoubleLogTimerSetIdx = 0;
+    bool m_timerDoubleLogShowDot1 = false;
+    bool m_timerDoubleLogShowDot2 = false;
+    
+    std::chrono::duration<double, std::milli> m_timerDoubleLogTime1;
+    std::chrono::duration<double, std::milli> m_timerDoubleLogTime2;
+    std::chrono::system_clock::time_point m_timerDoubleLogLastStop1;
+    std::chrono::system_clock::time_point m_timerDoubleLogLastStop2;
     
     //temperature
     std::array<int, 3> m_temp = {{0}};
@@ -237,6 +275,9 @@ protected:
     eSoundType m_eSound = eSoundType::eNone;
     bool m_sound = false;
     std::chrono::system_clock::time_point m_timeSoundStarted;
+    
+    //lcd on/off
+    bool m_lcdOn = true;
     
     unsigned int m_change_state_ts = CHG_ALL_STATES;
 };

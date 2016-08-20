@@ -16,6 +16,7 @@
 		1D67E5781C59343B00C07FD2 /* LcdUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D67E5701C59343B00C07FD2 /* LcdUpdater.cpp */; };
 		1D6DDB5C1CF0F99F001A74DF /* LcdLogTimerUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D6DDB5A1CF0F99F001A74DF /* LcdLogTimerUpdater.cpp */; };
 		1DB28B971CE501FE002C3FC8 /* LcdTempUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB28B951CE501FE002C3FC8 /* LcdTempUpdater.cpp */; };
+		1DCC6E501CF634BD0044A9C0 /* LcdDoubleLogTimerUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DCC6E4E1CF634BD0044A9C0 /* LcdDoubleLogTimerUpdater.cpp */; };
 		1DEE41B91C5BD87500618AAC /* InputButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DEE41B81C5BD87500618AAC /* InputButton.cpp */; };
 		1DEE41BC1C5C01C400618AAC /* LcdAlarmUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DEE41BA1C5C01C400618AAC /* LcdAlarmUpdater.cpp */; };
 		1DEE41BF1C5C031D00618AAC /* LcdStoperUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DEE41BD1C5C031D00618AAC /* LcdStoperUpdater.cpp */; };
@@ -53,6 +54,8 @@
 		1D8511FD1C59330C000194B6 /* UltraClock */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UltraClock; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DB28B951CE501FE002C3FC8 /* LcdTempUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdTempUpdater.cpp; sourceTree = "<group>"; };
 		1DB28B961CE501FE002C3FC8 /* LcdTempUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdTempUpdater.h; sourceTree = "<group>"; };
+		1DCC6E4E1CF634BD0044A9C0 /* LcdDoubleLogTimerUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdDoubleLogTimerUpdater.cpp; sourceTree = "<group>"; };
+		1DCC6E4F1CF634BD0044A9C0 /* LcdDoubleLogTimerUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LcdDoubleLogTimerUpdater.h; sourceTree = "<group>"; };
 		1DEE41B71C5BD83C00618AAC /* InputButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputButton.h; sourceTree = "<group>"; };
 		1DEE41B81C5BD87500618AAC /* InputButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputButton.cpp; sourceTree = "<group>"; };
 		1DEE41BA1C5C01C400618AAC /* LcdAlarmUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LcdAlarmUpdater.cpp; sourceTree = "<group>"; };
@@ -93,6 +96,8 @@
 		1D8511FF1C59330C000194B6 /* Src */ = {
 			isa = PBXGroup;
 			children = (
+				1DCC6E4E1CF634BD0044A9C0 /* LcdDoubleLogTimerUpdater.cpp */,
+				1DCC6E4F1CF634BD0044A9C0 /* LcdDoubleLogTimerUpdater.h */,
 				1DB28B951CE501FE002C3FC8 /* LcdTempUpdater.cpp */,
 				1DB28B961CE501FE002C3FC8 /* LcdTempUpdater.h */,
 				1D67E5651C59343B00C07FD2 /* clock.cpp */,
@@ -184,6 +189,7 @@
 				1D0B8AFA1C84CBEE00BEE70A /* LcdTimeSmallUpdater.cpp in Sources */,
 				1DEE41C21C5C03D100618AAC /* LcdTimerUpdater.cpp in Sources */,
 				1D67E5761C59343B00C07FD2 /* LcdDateUpdater.cpp in Sources */,
+				1DCC6E501CF634BD0044A9C0 /* LcdDoubleLogTimerUpdater.cpp in Sources */,
 				1DEE41BF1C5C031D00618AAC /* LcdStoperUpdater.cpp in Sources */,
 				1D67E5771C59343B00C07FD2 /* LcdTimeUpdater.cpp in Sources */,
 				1DB28B971CE501FE002C3FC8 /* LcdTempUpdater.cpp in Sources */,
